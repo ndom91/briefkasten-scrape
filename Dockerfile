@@ -4,6 +4,6 @@ COPY . /src
 WORKDIR /src
 
 RUN npm install
-RUN npx playwright install
+RUN npx playwright install chromium
 
 CMD [ "npm", "start"]
