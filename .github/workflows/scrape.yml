@@ -3,7 +3,7 @@ name: Playwright Fetch Images
 on:
   push:
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   fetch-images:
@@ -18,7 +18,7 @@ jobs:
       # run application Docker image
       - name: Start container (application)
         run: |
-          docker run --rm -d --name briefkasten-scrape \
+          docker run --rm -it \
           -e IMAGEKIT_PRIV_KEY="${{ secrets.IMAGEKIT_PRIV_KEY }}" \
           -e IMAGEKIT_PUB_KEY="${{ secrets.IMAGEKIT_PUB_KEY }}" \
           -e IMAGEKIT_URL="${{ secrets.IMAGEKIT_URL }}" \
