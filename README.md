@@ -1,6 +1,11 @@
 # 📸 Briefkasten Image Job
 
-Job to periodically fetch missing bookmark screenshot cover photos for users of [Briefkasten](https://github.com/ndom91/briefkasten).
+Job to periodically fetch missing bookmark screenshot cover photos. 
+
+- [Briefkasten App](https://briefkasten.vercel.app)
+- [Briefkasten App Repo](https://github.com/ndom91/briefkasten)
+- [Briefkasten Extension](https://github.com/ndom91/briefkasten-extension)
+
 
 ## 🚀 Getting Started
 
