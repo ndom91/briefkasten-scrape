@@ -1,4 +1,4 @@
-name: Playwright Fetch
+name: Playwright Fetch Images
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 jobs:
-  checkout:
+  fetch-images:
     runs-on: ubuntu-latest
     steps:
       # checkout application code
