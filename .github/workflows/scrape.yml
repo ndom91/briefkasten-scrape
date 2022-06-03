@@ -9,16 +9,13 @@ jobs:
   fetch-images:
     runs-on: ubuntu-latest
     steps:
-      # checkout application code
-      - name: Checkout project
+      - name: Checkout code
         uses: actions/checkout@v2
-      # build application Docker image
-      - name: Build image (application)
+      - name: Build image
         run: docker build -t briefkasten-scrape:latest .
-      # run application Docker image
-      - name: Start container (application)
+      - name: Run image
         run: |
-          docker run --rm -it \
+          docker run --rm  \
           -e IMAGEKIT_PRIV_KEY="${{ secrets.IMAGEKIT_PRIV_KEY }}" \
           -e IMAGEKIT_PUB_KEY="${{ secrets.IMAGEKIT_PUB_KEY }}" \
           -e IMAGEKIT_URL="${{ secrets.IMAGEKIT_URL }}" \
