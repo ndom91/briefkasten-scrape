@@ -45,7 +45,6 @@
     "arrowSpacing": true
   },
   "simple-git-hooks": {
-    "commit-msg": "npx commitlint --edit",
     "pre-commit": "npx lint-staged"
   },
   "lint-staged": {
@@ -56,5 +55,4 @@
       "eslint --fix"
     ]
   }
-}
 }
