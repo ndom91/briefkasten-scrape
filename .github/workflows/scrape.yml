@@ -1,0 +1,26 @@
+name: Playwright Fetch
+
+on:
+  push:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  checkout:
+    runs-on: ubuntu-latest
+    steps:
+      # checkout application code
+      - name: Checkout project
+        uses: actions/checkout@v2
+      # build application Docker image
+      - name: Build image (application)
+        run: docker build -t briefkasten-scrape:latest .
+      # run application Docker image
+      - name: Start container (application)
+        run: |
+          docker run --rm -d --name briefkasten-scrape \
+          -e IMAGEKIT_PRIV_KEY="${{ secrets.IMAGEKIT_PRIV_KEY }}" \
+          -e IMAGEKIT_PUB_KEY="${{ secrets.IMAGEKIT_PUB_KEY }}" \
+          -e IMAGEKIT_URL="${{ secrets.IMAGEKIT_URL }}" \
+          -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+          briefkasten-scrape:latest

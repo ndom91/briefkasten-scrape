@@ -1,0 +1,22 @@
+{
+  "name": "briefkasten-scraper",
+  "version": "0.0.1",
+  "description": "Briefkasten missing image job",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./index.js"
+  },
+  "keywords": [
+    "playwright",
+    "bookmarks",
+    "screenshots"
+  ],
+  "author": "ndom91 <yo@ndo.dev>",
+  "license": "MIT",
+  "dependencies": {
+    "imagekit": "^3.2.5",
+    "mysql2": "^2.3.3",
+    "playwright": "^1.22.2"
+  }
+}
