@@ -56,7 +56,7 @@ const uploadImage = async (imageBuffer, filename) => {
 
     return uploadRes.url
   } catch (e) {
-    console.error('Image upload error', e)
+                  console.error('Image upload error', e)
   }
 }
 

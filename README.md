@@ -1,6 +1,11 @@
 # 📸 Briefkasten Image Job
 
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ndom91/briefkasten-scrape/Playwright%20Fetch%20Images?label=job&style=flat-square)
+[![Demo](https://img.shields.io/badge/demo-instance-green?style=flat-square)](https://briefkasten.vercel.app)
+
 Job to periodically fetch missing bookmark screenshot cover photos. 
+
+See also:
 
 - [Briefkasten App](https://briefkasten.vercel.app)
 - [Briefkasten App Repo](https://github.com/ndom91/briefkasten)
