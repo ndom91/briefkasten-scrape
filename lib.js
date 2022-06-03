@@ -2,16 +2,8 @@ import playwright from 'playwright'
 import ImageKit from 'imagekit'
 
 const fetchImage = async (url) => {
-  console.log('fetchingImage', url)
   try {
-    // console.log(await awsChromium.executablePath)
-    const browser = await chromium.launch()
-    //   {
-    //   args: awsChromium.args,
-    //   executablePath: await awsChromium.executablePath,
-    //   headless: true
-    // })
-
+    const browser = await playwright.chromium.launch()
     const page = await browser.newPage()
     await page.goto(url)
 
@@ -35,9 +27,6 @@ const fetchImage = async (url) => {
 
     // Wait for cookie banner to be gone
     await page.waitForTimeout(2500)
-    // await page.waitForNetworkIdle({
-    //   timeout: 25000,
-    // })
 
     // Snap screenshot
     const buffer = await page.screenshot({ type: 'jpeg', quality: 50 })

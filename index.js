@@ -1,3 +1,4 @@
+import { fetchImage, uploadImage } from './lib.js'
 import mysql from 'mysql2/promise' 
 
 const userId = 'cl2z766os0010tfbh1lh04u3s'
@@ -7,22 +8,28 @@ const userId = 'cl2z766os0010tfbh1lh04u3s'
     const connection = await mysql.createConnection(process.env.DATABASE_URL ?? '');
     const [readRows] = await connection.execute('SELECT id, url FROM `Bookmark` WHERE `userId` = ? AND `image` IS NULL LIMIT 3', [userId])
 
-    console.log('readRows', readRows)
-    console.log('typeof readRows', typeof readRows)
-    console.log('readRows[0]', readRows[0])
+    console.log('Fetched bookmarks', readRows)
 
     for (const row of readRows) {
       console.log('Attempting row...', row)
+
       const { id, url } = row
       const imageBuffer = await fetchImage(url)
+
       if (imageBuffer) {
         const imageUrl = await uploadImage(imageBuffer, `${url}.png`)
-        console.log('Uploaded image', `${url}.png`)
+        console.debug('ImageUrl', imageUrl)
         const [updateRows] = await connection.execute('UPDATE `Bookmark` SET `image` = ? WHERE `id` = ? AND `userId` = ?', [imageUrl, id, userId]);
-        console.log('updateRows', updateRows)
+        if (updateRows.affectedRows === 1) {
+          console.log(`Successfully updated ${new URL(url)?.hostname ?? ''} (${id})`)
+        }
       }
     }
+
+    // Finished all fetched images, exit 0
+    process.exit(0)
   } catch (e) {
     console.error('Database error', e)
+    process.exit(1)
   }
 })()
