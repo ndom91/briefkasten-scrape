@@ -27,8 +27,7 @@ const userId = 'cl2z766os0010tfbh1lh04u3s'
     // For each row, i.e. bookmark, visit the URL with Playwright and
     // capture a screenshot. Then upload that screenshot to Imagekit
     for (const row of readRows) {
-      console.log('\n')
-      console.log(`[${new Date().getTime()}] Attempting URL: ${row.url}`)
+      console.log(`\n[${new Date().getTime()}] Attempting URL: ${row.url}`)
 
       const { id, url } = row
       const imageBuffer = await fetchImage(url)
@@ -49,6 +48,8 @@ const userId = 'cl2z766os0010tfbh1lh04u3s'
         }
       }
     }
+
+    console.log(`\n[${new Date().getTime()}] Successfully finished job`)
 
     // Finished all fetched images, exit 0
     process.exit(0)
