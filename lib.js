@@ -1,5 +1,5 @@
-import playwright from 'playwright'
 import ImageKit from 'imagekit'
+import playwright from 'playwright'
 
 const fetchImage = async (url) => {
   try {
@@ -56,11 +56,8 @@ const uploadImage = async (imageBuffer, filename) => {
 
     return uploadRes.url
   } catch (e) {
-                  console.error('Image upload error', e)
+    console.error('Image upload error', e)
   }
 }
 
-export {
-  fetchImage,
-  uploadImage
-}
+export { fetchImage, uploadImage }
