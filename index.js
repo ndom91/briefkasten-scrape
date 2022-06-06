@@ -11,7 +11,10 @@ const userId = 'cl2z766os0010tfbh1lh04u3s'
     // Fetch the first 5 Bookmarks with missing imageUrls
     const [readRows] = await connection.execute(
       'SELECT id, url FROM `Bookmark` WHERE `userId` = ? AND `image` IS NULL LIMIT ?',
-      [userId, process.env.BOOKMARKS_CHUNK ?? 5]
+      [
+        userId,
+        process.env.BOOKMARKS_CHUNK ? parseInt(process.env.BOOKMARKS_CHUNK) : 5,
+      ]
     )
 
     if (readRows.length === 0) {
