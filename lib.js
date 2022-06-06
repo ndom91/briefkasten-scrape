@@ -4,7 +4,7 @@ import playwright from 'playwright'
 const fetchImage = async (url) => {
   try {
     const browser = await playwright.chromium.launch()
-    const page = await browser.newPage()
+    const page = await browser.newPage({ ignoreHTTPSErrors: true })
     await page.goto(url)
 
     // Hack for accepting cookie banners

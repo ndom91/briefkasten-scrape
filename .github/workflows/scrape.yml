@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [main]
   schedule:
-    - cron: "20 */2 * * *"
+    - cron: '20 */2 * * *'
 
 jobs:
   fetch-images:
@@ -22,4 +22,5 @@ jobs:
           -e IMAGEKIT_PUB_KEY="${{ secrets.IMAGEKIT_PUB_KEY }}" \
           -e IMAGEKIT_URL="${{ secrets.IMAGEKIT_URL }}" \
           -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+          -e BOOKMARKS_CHUNK="${{ secrets.BOOKMARKS_CHUNK }}" \
           briefkasten-scrape:latest
