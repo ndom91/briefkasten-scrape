@@ -10,7 +10,7 @@ on:
 jobs:
   fetch-images:
     runs-on: ubuntu-latest
-    if: ${{ false() }}
+    if: ${{ false }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
