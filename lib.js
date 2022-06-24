@@ -1,7 +1,21 @@
-import ImageKit from 'imagekit'
+import { createClient } from '@supabase/supabase-js'
 import playwright from 'playwright'
+import * as pg from 'pg'
+const { Client } = pg.default
 
-const fetchImage = async (url) => {
+if (!process.env.SUPABASE_URL) throw new Error('Missing env.SUPABASE_URL')
+if (!process.env.SUPABASE_KEY) throw new Error('Missing env.SUPABASE_KEY')
+
+export const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+)
+
+// For now, only run for ndom91 user
+const userId = 'cl4gz8n0h000823bqdl0j2f4o'
+
+const fetchImage = async (url, id) => {
+  let client
   try {
     const browser = await playwright.chromium.launch()
     const page = await browser.newPage({ ignoreHTTPSErrors: true })
@@ -36,27 +50,53 @@ const fetchImage = async (url) => {
 
     return buffer
   } catch (e) {
-    console.error('chromium error', e)
+    console.error(`[${new Date().getTime()}] [PW ERROR]`, e)
+    if (
+      e.message.includes('ERR_CONNECTION_REFUSED') ||
+      e.message.includes('ERR_NAME_NOT_RESOLVED')
+    ) {
+      const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+      })
+      await client.connect()
+      const imageUrl = `https://source.unsplash.com/random/300x201?sig=${Math.floor(
+        Math.random() * 100
+      )}`
+      const res = await client.query(
+        `UPDATE "Bookmark" SET image = $1 WHERE id = $2 AND "userId" = $3`,
+        [imageUrl, id, userId]
+      )
+      if (res.rowCount === 1) {
+        console.log(
+          `[${new Date().getTime()}] Could not resolve ${url}, set unsplash image`
+        )
+      }
+    }
+  } finally {
+    if (client) {
+      await client.end()
+    }
   }
 }
 
-const uploadImage = async (imageBuffer, filename) => {
+const uploadImage = async (userId, imageBuffer, filename) => {
   try {
-    const imagekit = new ImageKit({
-      publicKey: process.env.IMAGEKIT_PUB_KEY ?? '',
-      privateKey: process.env.IMAGEKIT_PRIV_KEY ?? '',
-      urlEndpoint: process.env.IMAGEKIT_URL ?? '',
-    })
+    let { data, error } = await supabase.storage.from('bookmark-imgs').upload(
+      `${userId}/${filename}.jpg`,
+      // Buffer.from(prepareBase64DataUrl(body), 'base64'),
+      imageBuffer,
+      {
+        contentType: 'image/jpeg',
+        upsert: true,
+      }
+    )
+    if (error) {
+      throw error
+    }
 
-    // Upload image body to ImageKit
-    const uploadRes = await imagekit.upload({
-      file: imageBuffer,
-      fileName: `${filename}.jpg`,
-    })
-
-    return uploadRes.url
+    return `https://exjtybpqdtxkznbmllfi.supabase.co/storage/v1/object/public/${data.Key}`
   } catch (e) {
-    console.error('Image upload error', e)
+    console.error(`[${new Date().getTime()}] [SUPABASE UPLOAD ERROR]`, e)
   }
 }
 

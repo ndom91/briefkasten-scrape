@@ -1,23 +1,28 @@
 import { fetchImage, uploadImage } from './lib.js'
-import mysql from 'mysql2/promise'
+import * as pg from 'pg'
+const { Client } = pg.default
 
 // For now, only run for ndom91 user
-const userId = 'cl2z766os0010tfbh1lh04u3s'
+const userId = 'cl4gz8n0h000823bqdl0j2f4o'
 
 ;(async () => {
+  let client
   try {
-    const connection = await mysql.createConnection(process.env.DATABASE_URL)
+    client = new Client({
+      connectionString: process.env.DATABASE_URL,
+    })
+    await client.connect()
 
     // Fetch the first 5 Bookmarks with missing imageUrls
-    const [readRows] = await connection.execute(
-      'SELECT id, url FROM `Bookmark` WHERE `userId` = ? AND `image` IS NULL LIMIT ?',
+    const { rows } = await client.query(
+      `SELECT id, url FROM "Bookmark" WHERE "userId" = $1 AND image IS NULL LIMIT $2`,
       [
         userId,
         process.env.BOOKMARKS_CHUNK ? parseInt(process.env.BOOKMARKS_CHUNK) : 5,
       ]
     )
 
-    if (readRows.length === 0) {
+    if (rows.length === 0) {
       // No more bookmarks with missing imageUrls found, exit 0
       console.log(
         `[${new Date().getTime()}] No more bookmarks with missing images found.`
@@ -25,24 +30,24 @@ const userId = 'cl2z766os0010tfbh1lh04u3s'
       process.exit(0)
     }
 
-    console.log(`[${new Date().getTime()}] Fetched bookmarks`, readRows)
+    console.log(`[${new Date().getTime()}] Fetched bookmarks`, rows)
 
     // For each row, i.e. bookmark, visit the URL with Playwright and
     // capture a screenshot. Then upload that screenshot to Imagekit
-    for (const row of readRows) {
+    for (const row of rows) {
       console.log(`\n[${new Date().getTime()}] Attempting URL: ${row.url}`)
 
       const { id, url } = row
-      const imageBuffer = await fetchImage(url)
+      const imageBuffer = await fetchImage(url, id)
 
       if (imageBuffer) {
-        const imageUrl = await uploadImage(imageBuffer, `${url}.png`)
+        const imageUrl = await uploadImage(userId, imageBuffer, `${url}.png`)
         console.log(`[${new Date().getTime()}] Uploaded image: ${imageUrl}`)
-        const [updateRows] = await connection.execute(
-          'UPDATE `Bookmark` SET `image` = ? WHERE `id` = ? AND `userId` = ?',
+        const updateRes = await client.query(
+          `UPDATE "Bookmark" SET image = $1 WHERE id = $2 AND "userId" = $3`,
           [imageUrl, id, userId]
         )
-        if (updateRows.affectedRows === 1) {
+        if (updateRes.rowCount === 1) {
           console.log(
             `[${new Date().getTime()}] Successfully updated ${
               new URL(url)?.hostname ?? ''
@@ -60,5 +65,7 @@ const userId = 'cl2z766os0010tfbh1lh04u3s'
     // Error fetching and uploading images, exit 1
     console.error(`[${new Date().getTime()}] Error`, e)
     process.exit(1)
+  } finally {
+    await client.end()
   }
 })()

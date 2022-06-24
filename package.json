@@ -15,8 +15,8 @@
   "author": "ndom91 <yo@ndo.dev>",
   "license": "MIT",
   "dependencies": {
-    "imagekit": "^3.2.5",
-    "mysql2": "^2.3.3",
+    "@supabase/supabase-js": "^1.35.3",
+    "pg": "^8.7.3",
     "playwright": "^1.22.2"
   },
   "devDependencies": {
