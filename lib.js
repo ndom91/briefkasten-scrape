@@ -50,10 +50,11 @@ const fetchImage = async (url, id) => {
 
     return buffer
   } catch (e) {
-    console.error(`[${new Date().getTime()}] [PW ERROR]`, e)
+    console.error(`[${new Date().getTime() / 1000}] [PW ERROR]`, e)
     if (
       e.message.includes('ERR_CONNECTION_REFUSED') ||
-      e.message.includes('ERR_NAME_NOT_RESOLVED')
+      e.message.includes('ERR_NAME_NOT_RESOLVED') ||
+      e.message.includes('ERR_ABORTED')
     ) {
       const client = new Client({
         connectionString: process.env.DATABASE_URL,
@@ -68,7 +69,9 @@ const fetchImage = async (url, id) => {
       )
       if (res.rowCount === 1) {
         console.log(
-          `[${new Date().getTime()}] Could not resolve ${url}, set unsplash image`
+          `[${
+            new Date().getTime() / 1000
+          }] Could not resolve ${url}, set unsplash image`
         )
       }
     }
@@ -96,7 +99,7 @@ const uploadImage = async (userId, imageBuffer, filename) => {
 
     return `https://exjtybpqdtxkznbmllfi.supabase.co/storage/v1/object/public/${data.Key}`
   } catch (e) {
-    console.error(`[${new Date().getTime()}] [SUPABASE UPLOAD ERROR]`, e)
+    console.error(`[${new Date().getTime() / 1000}] [SUPABASE UPLOAD ERROR]`, e)
   }
 }
 
