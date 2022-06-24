@@ -5,12 +5,12 @@ on:
   pull_request:
     branches: [main]
   schedule:
-    - cron: '20 */2 * * *'
+    - cron: '20 */6 * * *'
 
 jobs:
   fetch-images:
     runs-on: ubuntu-latest
-    if: ${{ false }}
+    # if: ${{ false }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
