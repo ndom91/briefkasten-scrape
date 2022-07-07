@@ -15,7 +15,12 @@ const userId = 'cl4gz8n0h000823bqdl0j2f4o'
 
     // Fetch the first 5 Bookmarks with missing imageUrls
     const { rows } = await client.query(
-      `SELECT id, url FROM "Bookmark" WHERE ("userId" = $1) AND (image IS NULL OR image LIKE '%unsplash%') LIMIT $2`,
+      `SELECT id, url
+      FROM "Bookmark"
+      WHERE ("userId" = $1)
+      AND (image IS NULL OR image LIKE '%unsplash%')
+      AND (image NOT LIKE 'https://source.unsplash.com/random/300x201?sig%')
+      LIMIT $2`,
       [
         userId,
         process.env.BOOKMARKS_CHUNK ? parseInt(process.env.BOOKMARKS_CHUNK) : 5,
