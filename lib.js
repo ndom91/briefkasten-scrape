@@ -56,24 +56,24 @@ const fetchImage = async (url, id) => {
       e.message.includes('ERR_NAME_NOT_RESOLVED') ||
       e.message.includes('ERR_ABORTED')
     ) {
-      const client = new Client({
-        connectionString: process.env.DATABASE_URL,
-      })
-      await client.connect()
-      const imageUrl = `https://source.unsplash.com/random/300x201?sig=${Math.floor(
-        Math.random() * 100
-      )}`
-      const res = await client.query(
-        `UPDATE "Bookmark" SET image = $1 WHERE id = $2 AND "userId" = $3`,
-        [imageUrl, id, userId]
-      )
-      if (res.rowCount === 1) {
-        console.log(
-          `[${
-            new Date().getTime() / 1000
-          }] Could not resolve ${url}, set unsplash image`
-        )
-      }
+      // const client = new Client({
+      //   connectionString: process.env.DATABASE_URL,
+      // })
+      // await client.connect()
+      // const imageUrl = `https://source.unsplash.com/random/300x201?sig=${Math.floor(
+      //   Math.random() * 100
+      // )}`
+      // const res = await client.query(
+      //   `UPDATE "Bookmark" SET image = $1 WHERE id = $2 AND "userId" = $3`,
+      //   [imageUrl, id, userId]
+      // )
+      // if (res.rowCount === 1) {
+      //   console.log(
+      //     `[${
+      //       new Date().getTime() / 1000
+      //     }] Could not resolve ${url}, set unsplash image`
+      //   )
+      // }
     }
   } finally {
     if (client) {
