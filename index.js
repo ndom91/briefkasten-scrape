@@ -45,7 +45,11 @@ const userId = 'cl4gz8n0h000823bqdl0j2f4o'
       const imageBuffer = await fetchImage(url, id)
 
       if (imageBuffer) {
-        const imageUrl = await uploadImage(userId, imageBuffer, `${url}.png`)
+        const imageUrl = await uploadImage(
+          userId,
+          imageBuffer,
+          new URL(url).hostname
+        )
         console.log(
           `[${new Date().getTime() / 1000}] Uploaded image: ${imageUrl}`
         )
