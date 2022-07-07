@@ -61,7 +61,7 @@ const userId = 'cl4gz8n0h000823bqdl0j2f4o'
         )
 
         const updateRes = await client.query(
-          `UPDATE "Bookmark" SET image = $1, imageBlur = $2 WHERE id = $3 AND "userId" = $4`,
+          `UPDATE "Bookmark" SET image = $1, "imageBlur" = $2 WHERE id = $3 AND "userId" = $4`,
           [imageUrl, imageBlur, id, userId]
         )
 
