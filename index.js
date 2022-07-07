@@ -50,18 +50,21 @@ const userId = 'cl4gz8n0h000823bqdl0j2f4o'
       const imageBuffer = await fetchImage(url, id)
 
       if (imageBuffer) {
-        const imageUrl = await uploadImage(
+        const { imageUrl, imageBlur } = await uploadImage(
           userId,
           imageBuffer,
           new URL(url).hostname
         )
+
         console.log(
           `[${new Date().getTime() / 1000}] Uploaded image: ${imageUrl}`
         )
+
         const updateRes = await client.query(
-          `UPDATE "Bookmark" SET image = $1 WHERE id = $2 AND "userId" = $3`,
-          [imageUrl, id, userId]
+          `UPDATE "Bookmark" SET image = $1, imageBlur = $2 WHERE id = $3 AND "userId" = $4`,
+          [imageUrl, imageBlur, id, userId]
         )
+
         if (updateRes.rowCount === 1) {
           console.log(
             `[${new Date().getTime() / 1000}] Successfully updated ${

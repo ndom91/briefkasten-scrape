@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { getPlaiceholder } from 'plaiceholder'
 import playwright from 'playwright'
 import * as pg from 'pg'
 const { Client } = pg.default
@@ -84,20 +85,25 @@ const fetchImage = async (url, id) => {
 
 const uploadImage = async (userId, imageBuffer, filename) => {
   try {
-    let { data, error } = await supabase.storage.from('bookmark-imgs').upload(
-      `${userId}/${filename}.jpg`,
-      // Buffer.from(prepareBase64DataUrl(body), 'base64'),
-      imageBuffer,
-      {
+    let { data, error } = await supabase.storage
+      .from('bookmark-imgs')
+      .upload(`${userId}/${filename}.jpg`, imageBuffer, {
         contentType: 'image/jpeg',
         upsert: true,
-      }
-    )
+      })
     if (error) {
       throw error
     }
+    if (data) {
+      const { base64 } = await getPlaiceholder(
+        `https://exjtybpqdtxkznbmllfi.supabase.co/storage/v1/object/public/${data.Key}`
+      )
 
-    return `https://exjtybpqdtxkznbmllfi.supabase.co/storage/v1/object/public/${data.Key}`
+      return {
+        imageUrl: `https://exjtybpqdtxkznbmllfi.supabase.co/storage/v1/object/public/${data.Key}`,
+        imageBlur: base64,
+      }
+    }
   } catch (e) {
     console.error(`[${new Date().getTime() / 1000}] [SUPABASE UPLOAD ERROR]`, e)
   }
