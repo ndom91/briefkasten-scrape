@@ -18,7 +18,7 @@ const userId = 'cl4gz8n0h000823bqdl0j2f4o'
       `SELECT id, url
       FROM "Bookmark"
       WHERE ("userId" = $1)
-      AND (image IS NULL OR image LIKE '%unsplash%')
+      AND (image IS NULL OR image LIKE '%unsplash%' OR image LIKE '%imagekit%')
       AND (image NOT LIKE 'https://source.unsplash.com/random/300x201?sig%')
       LIMIT $2`,
       [
