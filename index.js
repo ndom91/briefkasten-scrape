@@ -2,9 +2,6 @@ import { fetchImage, uploadImage } from './lib.js'
 import * as pg from 'pg'
 const { Client } = pg.default
 
-// For now, only run for ndom91 user
-const userId = 'cl4gz8n0h000823bqdl0j2f4o'
-
 ;(async () => {
   let client
   try {
@@ -15,16 +12,12 @@ const userId = 'cl4gz8n0h000823bqdl0j2f4o'
 
     // Fetch the first 5 Bookmarks with missing imageUrls
     const { rows } = await client.query(
-      `SELECT id, url
+      `SELECT id, url, "userId"
       FROM "Bookmark"
-      WHERE ("userId" = $1)
-      AND (image IS NULL OR image LIKE '%unsplash%' OR image LIKE '%imagekit%')
+      WHERE (image IS NULL OR image LIKE '%unsplash%' OR image LIKE '%imagekit%')
       AND (image NOT LIKE 'https://source.unsplash.com/random/300x201?sig%')
-      LIMIT $2`,
-      [
-        userId,
-        process.env.BOOKMARKS_CHUNK ? parseInt(process.env.BOOKMARKS_CHUNK) : 5,
-      ]
+      LIMIT $1`,
+      [process.env.BOOKMARKS_CHUNK ? parseInt(process.env.BOOKMARKS_CHUNK) : 5]
     )
 
     if (rows.length === 0) {
@@ -37,7 +30,8 @@ const userId = 'cl4gz8n0h000823bqdl0j2f4o'
       process.exit(0)
     }
 
-    console.log(`[${new Date().getTime() / 1000}] Fetched bookmarks`, rows)
+    console.log(`[${new Date().getTime() / 1000}] Fetched bookmarks`)
+    console.table(rows)
 
     // For each row, i.e. bookmark, visit the URL with Playwright and
     // capture a screenshot. Then upload that screenshot to Imagekit
@@ -46,7 +40,7 @@ const userId = 'cl4gz8n0h000823bqdl0j2f4o'
         `\n[${new Date().getTime() / 1000}] Attempting URL: ${row.url}`
       )
 
-      const { id, url } = row
+      const { id, url, userId } = row
       const imageBuffer = await fetchImage(url, id)
 
       if (imageBuffer) {

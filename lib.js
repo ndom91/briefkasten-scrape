@@ -12,9 +12,6 @@ export const supabase = createClient(
   process.env.SUPABASE_KEY
 )
 
-// For now, only run for ndom91 user
-const userId = 'cl4gz8n0h000823bqdl0j2f4o'
-
 const fetchImage = async (url, id) => {
   let client
   try {
@@ -65,8 +62,8 @@ const fetchImage = async (url, id) => {
         Math.random() * 100
       )}`
       const res = await client.query(
-        `UPDATE "Bookmark" SET image = $1 WHERE id = $2 AND "userId" = $3`,
-        [imageUrl, id, userId]
+        `UPDATE "Bookmark" SET image = $1 WHERE id = $2`,
+        [imageUrl, id]
       )
       if (res.rowCount === 1) {
         console.log(

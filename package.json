@@ -1,6 +1,6 @@
 {
   "name": "briefkasten-scraper",
-  "version": "0.0.1",
+  "version": "0.3.0",
   "description": "Briefkasten missing image job",
   "main": "index.js",
   "type": "module",
