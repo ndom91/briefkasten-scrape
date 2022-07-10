@@ -1,4 +1,4 @@
-import { fetchImage, uploadImage } from './lib.js'
+import { fetchImage, uploadImage, getTime } from './lib.js'
 import * as pg from 'pg'
 const { Client } = pg.default
 
@@ -22,23 +22,17 @@ const { Client } = pg.default
 
     if (rows.length === 0) {
       // No more bookmarks with missing imageUrls found, exit 0
-      console.log(
-        `[${
-          new Date().getTime() / 1000
-        }] No more bookmarks with missing images found.`
-      )
+      console.log(`[${getTime()}] No more bookmarks with missing images found.`)
       process.exit(0)
     }
 
-    console.log(`[${new Date().getTime() / 1000}] Fetched bookmarks`)
+    console.log(`[${getTime()}] Fetched bookmarks`)
     console.table(rows)
 
     // For each row, i.e. bookmark, visit the URL with Playwright and
     // capture a screenshot. Then upload that screenshot to Imagekit
     for (const row of rows) {
-      console.log(
-        `\n[${new Date().getTime() / 1000}] Attempting URL: ${row.url}`
-      )
+      console.log(`\n[${getTime()}] Attempting URL: ${row.url}`)
 
       const { id, url, userId } = row
       const imageBuffer = await fetchImage(url, id)
@@ -50,9 +44,7 @@ const { Client } = pg.default
           new URL(url).hostname
         )
 
-        console.log(
-          `[${new Date().getTime() / 1000}] Uploaded image: ${imageUrl}`
-        )
+        console.log(`[${getTime()}] Uploaded image: ${imageUrl}`)
 
         const updateRes = await client.query(
           `UPDATE "Bookmark" SET image = $1, "imageBlur" = $2 WHERE id = $3 AND "userId" = $4`,
@@ -61,7 +53,7 @@ const { Client } = pg.default
 
         if (updateRes.rowCount === 1) {
           console.log(
-            `[${new Date().getTime() / 1000}] Successfully updated ${
+            `[${getTime()}] Successfully updated ${
               new URL(url)?.hostname ?? ''
             } (${id})`
           )
@@ -69,13 +61,13 @@ const { Client } = pg.default
       }
     }
 
-    console.log(`\n[${new Date().getTime() / 1000}] Successfully finished job`)
+    console.log(`\n[${getTime()}] Successfully finished job`)
 
     // Finished all fetched images, exit 0
     process.exit(0)
   } catch (e) {
     // Error fetching and uploading images, exit 1
-    console.error(`[${new Date().getTime() / 1000}] Error`, e)
+    console.error(`[${getTime()}] Error`, e)
     process.exit(1)
   } finally {
     await client.end()

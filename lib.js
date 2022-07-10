@@ -48,7 +48,7 @@ const fetchImage = async (url, id) => {
 
     return buffer
   } catch (e) {
-    console.error(`[${new Date().getTime() / 1000}] [PW ERROR]`, e)
+    console.error(`[${getTime()}] [PW ERROR]`, e)
     if (
       e.message.includes('ERR_CONNECTION_REFUSED') ||
       e.message.includes('ERR_NAME_NOT_RESOLVED') ||
@@ -67,9 +67,7 @@ const fetchImage = async (url, id) => {
       )
       if (res.rowCount === 1) {
         console.log(
-          `[${
-            new Date().getTime() / 1000
-          }] Could not resolve ${url}, set unsplash random image`
+          `[${getTime()}] Could not resolve ${url}, set unsplash random image`
         )
       }
     }
@@ -102,8 +100,12 @@ const uploadImage = async (userId, imageBuffer, filename) => {
       }
     }
   } catch (e) {
-    console.error(`[${new Date().getTime() / 1000}] [SUPABASE UPLOAD ERROR]`, e)
+    console.error(`[${getTime()}] [SUPABASE UPLOAD ERROR]`, e)
   }
 }
 
-export { fetchImage, uploadImage }
+const getTime = () => {
+  return parseInt(new Date().getTime() / 1000)
+}
+
+export { fetchImage, uploadImage, getTime }
