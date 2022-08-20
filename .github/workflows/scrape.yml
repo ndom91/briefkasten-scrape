@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [main]
   schedule:
-    - cron: '20 */6 * * *'
+    - cron: '20 */1 * * *'
 
 jobs:
   fetch-images:
