@@ -38,10 +38,10 @@ $ docker build . -t briefkasten-scrape:latest
 
 ```sh
 $ docker run --rm -d --name briefkasten-scrape \
-  -e IMAGEKIT_PRIV_KEY="${{ secrets.IMAGEKIT_PRIV_KEY }}" \
-  -e IMAGEKIT_PUB_KEY="${{ secrets.IMAGEKIT_PUB_KEY }}" \
-  -e IMAGEKIT_URL="${{ secrets.IMAGEKIT_URL }}" \
+  -e SUPABASE_KEY="${{ secrets.SUPABASE_KEY }}" \
+  -e SUPABASE_URL="${{ secrets.SUPABASE_URL }}" \
   -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+  -e BOOKMARKS_CHUNK="${{ secrets.BOOKMARKS_CHUNK }}" \
   briefkasten-scrape:latest
 ```
 
