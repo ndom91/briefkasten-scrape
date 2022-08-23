@@ -49,10 +49,12 @@ const fetchImage = async (url, id) => {
     return buffer
   } catch (e) {
     console.error(`[${getTime()}] [PW ERROR]`, e)
+    console.error(`[${getTime()}] [PW ERROR:MESSAGE]`, e.message)
     if (
       e.message.includes('ERR_CONNECTION_REFUSED') ||
       e.message.includes('ERR_NAME_NOT_RESOLVED') ||
-      e.message.includes('ERR_ABORTED')
+      e.message.includes('ERR_ABORTED') ||
+      e.message.includes('ERR_TOO_MANY_REDIRECTS')
     ) {
       const client = new Client({
         connectionString: process.env.DATABASE_URL,
