@@ -14,8 +14,7 @@ const { Client } = pg.default
     const { rows } = await client.query(
       `SELECT id, url, "userId"
       FROM "Bookmark"
-      WHERE (image IS NULL OR image LIKE '%unsplash%' OR image LIKE '%imagekit%'
-      AND image NOT LIKE 'https://source.unsplash.com/random/300x201?sig%')
+      WHERE image IS NULL
       LIMIT $1`,
       [process.env.BOOKMARKS_CHUNK ? parseInt(process.env.BOOKMARKS_CHUNK) : 5]
     )
