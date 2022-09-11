@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js'
-import { getPlaiceholder } from 'plaiceholder'
 import playwright from 'playwright'
 import * as pg from 'pg'
 const { Client } = pg.default
@@ -93,13 +92,8 @@ const uploadImage = async (userId, imageBuffer, filename) => {
       throw error
     }
     if (data) {
-      const { base64 } = await getPlaiceholder(
-        `https://exjtybpqdtxkznbmllfi.supabase.co/storage/v1/object/public/${data.Key}`
-      )
-
       return {
         imageUrl: `https://exjtybpqdtxkznbmllfi.supabase.co/storage/v1/object/public/${data.Key}`,
-        imageBlur: base64,
       }
     }
   } catch (e) {
