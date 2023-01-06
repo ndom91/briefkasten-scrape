@@ -34,18 +34,66 @@ $ npm install
 $ docker build . -t briefkasten-scrape:latest
 ```
 
-4. Run container
+4. Configure the file `ENVFILE` accordingly
 
 ```sh
-$ docker run --rm -d --name briefkasten-scrape \
-  -e SUPABASE_KEY="${{ secrets.SUPABASE_KEY }}" \
-  -e SUPABASE_URL="${{ secrets.SUPABASE_URL }}" \
-  -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-  -e BOOKMARKS_CHUNK="${{ secrets.BOOKMARKS_CHUNK }}" \
+$vim ENVFILE
+```
+
+**file `ENVFILE`**
+
+```
+DATABASE_URL=postgres://bkAdmin:briefkasten@postgres:5432/briefkasten?sslmode=disable
+
+SUPABASE_KEY=
+SUPABASE_URL=
+SUPABASE_BUCKET_ID=
+
+BOOKMARKS_CHUNK=5
+```
+
+6. Run container
+
+```sh
+$ docker run \
+  --rm \
+  --name briefkasten-scrape \
+  --network briefkasten_default \
+  --env-file ENVFILE
   briefkasten-scrape:latest
 ```
 
 This will execute and fetch the first 5 Bookmarks with missing cover images and attempt to capture them with Playwright. They will be uploaded to your image store of choice and then displayed for the user the next time they open their Briefkasten.
+
+### Running automatically via a cronjob
+
+1. Install your favourite `cron` distribution
+
+```sh
+# apt install cronie
+```
+
+1. Enable and start the service
+
+```sh
+# systemctl enable cronie
+# systemctl start cronie
+```
+
+1. Edit your crontab
+
+```sh
+$ crontab -e
+```
+
+You can configure it to run each 20 minutes; add this line, and save the file:
+
+```
+*/20 * * * * docker run --rm --name briefkasten-scrape --network briefkasten_default --env-file /PATH/TO/YOUR/ENVFILE briefkasten-scrape:latest
+```
+
+`--network` is the network the `briefkasten` docker compose is using. Probably no need to change.
+
 
 ## 🏗 Contributing
 
