@@ -40,7 +40,7 @@ $ docker build . -t briefkasten-scrape:latest
 $vim ENVFILE
 ```
 
-**file `ENVFILE`**
+### **file `ENVFILE`**
 
 ```
 DATABASE_URL=postgres://bkAdmin:briefkasten@postgres:5432/briefkasten?sslmode=disable
@@ -65,19 +65,19 @@ $ docker run \
 
 This will execute and fetch the first 5 Bookmarks with missing cover images and attempt to capture them with Playwright. They will be uploaded to your image store of choice and then displayed for the user the next time they open their Briefkasten.
 
-### Running automatically via a cronjob
+## 🚀 Running the container automatically via a cronjob
 
 1. Install your favourite `cron` distribution
 
 ```sh
-# apt install cronie
+$ sudo apt install cronie
 ```
 
 2. Enable and start the service
 
 ```sh
-# systemctl enable cronie
-# systemctl start cronie
+$ sudo systemctl enable cronie
+$ sudo systemctl start cronie
 ```
 
 3. Edit your crontab
@@ -95,6 +95,8 @@ You can configure it to run each 20 minutes; add this line, and save the file:
 `--network` is the network the `briefkasten` docker compose is using. Probably no need to change.
 
 You need to edit `/PATH/TO/YOUR/ENVFILE` above pointing to your `ENVFILE`
+
+If you want to run your cronjon on another period, you can check the respective codes in https://crontab.guru
 
 ## 🏗 Contributing
 
