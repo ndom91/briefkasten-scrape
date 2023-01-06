@@ -15,10 +15,19 @@ const { Client } = pg.default
       `SELECT id, url, "userId"
       FROM "Bookmark"
       WHERE image IS NULL
-      LIMIT $1`,
-      [process.env.BOOKMARKS_CHUNK ? parseInt(process.env.BOOKMARKS_CHUNK) : 5]
+      OR image NOT LIKE $1
+      LIMIT $2`,
+      [
+        process.env.SUPABASE_URL + '%',
+        process.env.BOOKMARKS_CHUNK ? parseInt(process.env.BOOKMARKS_CHUNK) : 5,
+      ]
     )
 
+    /*WHERE (image IS NULL)
+      OR (image LIKE 'https://source.unsplash.com/%')
+      OR (image LIKE 'https://i.picsum.photos/%')*/
+    /*WHERE (image IS NULL)
+      OR (image NOT LIKE $1)*/
     if (rows.length === 0) {
       // No more bookmarks with missing imageUrls found, exit 0
       console.log(`[${getTime()}] No more bookmarks with missing images found.`)
@@ -40,7 +49,8 @@ const { Client } = pg.default
         const { imageUrl, imageBlur } = await uploadImage(
           userId,
           imageBuffer,
-          new URL(url).hostname
+          Date.now()
+          //new URL(url).hostname
         )
 
         console.log(`[${getTime()}] Uploaded image: ${imageUrl}`)
