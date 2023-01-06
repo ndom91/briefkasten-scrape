@@ -23,11 +23,6 @@ const { Client } = pg.default
       ]
     )
 
-    /*WHERE (image IS NULL)
-      OR (image LIKE 'https://source.unsplash.com/%')
-      OR (image LIKE 'https://i.picsum.photos/%')*/
-    /*WHERE (image IS NULL)
-      OR (image NOT LIKE $1)*/
     if (rows.length === 0) {
       // No more bookmarks with missing imageUrls found, exit 0
       console.log(`[${getTime()}] No more bookmarks with missing images found.`)
