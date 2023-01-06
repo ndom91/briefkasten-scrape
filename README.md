@@ -65,7 +65,7 @@ $ docker run \
 
 This will execute and fetch the first 5 Bookmarks with missing cover images and attempt to capture them with Playwright. They will be uploaded to your image store of choice and then displayed for the user the next time they open their Briefkasten.
 
-## 🚀 Running the container automatically via a cronjob
+## ⌚ Running the container automatically via a cronjob
 
 1. Install your favourite `cron` distribution
 
