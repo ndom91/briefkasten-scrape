@@ -37,7 +37,7 @@ $ docker build . -t briefkasten-scrape:latest
 4. Configure the file `ENVFILE` accordingly
 
 ```sh
-$vim ENVFILE
+$ vim ENVFILE
 ```
 
 #### **File `ENVFILE`**
