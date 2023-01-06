@@ -40,7 +40,7 @@ $ docker build . -t briefkasten-scrape:latest
 $vim ENVFILE
 ```
 
-### **file `ENVFILE`**
+#### **File `ENVFILE`**
 
 ```
 DATABASE_URL=postgres://bkAdmin:briefkasten@postgres:5432/briefkasten?sslmode=disable
