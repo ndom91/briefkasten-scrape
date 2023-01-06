@@ -45,7 +45,6 @@ const { Client } = pg.default
           userId,
           imageBuffer,
           Date.now()
-          //new URL(url).hostname
         )
 
         console.log(`[${getTime()}] Uploaded image: ${imageUrl}`)

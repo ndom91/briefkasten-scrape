@@ -85,7 +85,6 @@ const uploadImage = async (userId, imageBuffer, filename) => {
   try {
     let { data, error } = await supabase.storage
       .from(process.env.SUPABASE_BUCKET_ID)
-      //.from('bookmark-imgs')
       .upload(`${userId}/${filename}.jpg`, imageBuffer, {
         contentType: 'image/jpeg',
         upsert: true,
@@ -96,8 +95,6 @@ const uploadImage = async (userId, imageBuffer, filename) => {
     if (data) {
       return {
         imageUrl: `${process.env.SUPABASE_URL}/storage/v1/object/public/${data.Key}`,
-        //imageUrl: `https://exjtybpqdtxkznbmllfi.supabase.co/storage/v1/object/public/${data.Key}`,
-        //imageUrl: `${process.env.SUPABASE_URL}/storage/v1/object/public/${data.Key}`,
       }
     }
   } catch (e) {
