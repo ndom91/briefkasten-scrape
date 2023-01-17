@@ -86,7 +86,7 @@ $ sudo systemctl start cronie
 $ crontab -e
 ```
 
-You can configure it to run each 20 minutes; add this line, and save the file:
+You can configure it to run each 20 minutes; for this, add the following line, and save the file:
 
 ```
 */20 * * * * docker run --rm --name briefkasten-scrape --network briefkasten_default --env-file /PATH/TO/YOUR/ENVFILE briefkasten-scrape:latest
@@ -96,7 +96,7 @@ You can configure it to run each 20 minutes; add this line, and save the file:
 
 You need to edit `/PATH/TO/YOUR/ENVFILE` above pointing to your `ENVFILE`
 
-If you want to run your cronjon on another period, you can check the respective codes in https://crontab.guru
+If you want to run your cronjob on another period, you can check the respective codes in https://crontab.guru
 
 ## 🏗 Contributing
 
