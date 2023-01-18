@@ -5,6 +5,8 @@ const { Client } = pg.default
 
 if (!process.env.SUPABASE_URL) throw new Error('Missing env.SUPABASE_URL')
 if (!process.env.SUPABASE_KEY) throw new Error('Missing env.SUPABASE_KEY')
+if (!process.env.SUPABASE_BUCKET_ID)
+  throw new Error('Missing env.SUPABASE_BUCKET_ID')
 
 export const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -83,7 +85,7 @@ const fetchImage = async (url, id) => {
 const uploadImage = async (userId, imageBuffer, filename) => {
   try {
     let { data, error } = await supabase.storage
-      .from('bookmark-imgs')
+      .from(process.env.SUPABASE_BUCKET_ID)
       .upload(`${userId}/${filename}.jpg`, imageBuffer, {
         contentType: 'image/jpeg',
         upsert: true,
@@ -93,7 +95,7 @@ const uploadImage = async (userId, imageBuffer, filename) => {
     }
     if (data) {
       return {
-        imageUrl: `https://exjtybpqdtxkznbmllfi.supabase.co/storage/v1/object/public/${data.Key}`,
+        imageUrl: `${process.env.SUPABASE_URL}/storage/v1/object/public/${data.Key}`,
       }
     }
   } catch (e) {

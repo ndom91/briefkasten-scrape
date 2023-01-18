@@ -15,8 +15,12 @@ const { Client } = pg.default
       `SELECT id, url, "userId"
       FROM "Bookmark"
       WHERE image IS NULL
-      LIMIT $1`,
-      [process.env.BOOKMARKS_CHUNK ? parseInt(process.env.BOOKMARKS_CHUNK) : 5]
+      OR image NOT LIKE $1
+      LIMIT $2`,
+      [
+        process.env.SUPABASE_URL + '%',
+        process.env.BOOKMARKS_CHUNK ? parseInt(process.env.BOOKMARKS_CHUNK) : 5,
+      ]
     )
 
     if (rows.length === 0) {
@@ -40,7 +44,7 @@ const { Client } = pg.default
         const { imageUrl, imageBlur } = await uploadImage(
           userId,
           imageBuffer,
-          new URL(url).hostname
+          Date.now()
         )
 
         console.log(`[${getTime()}] Uploaded image: ${imageUrl}`)

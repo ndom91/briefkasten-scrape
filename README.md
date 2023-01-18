@@ -34,18 +34,70 @@ $ npm install
 $ docker build . -t briefkasten-scrape:latest
 ```
 
-4. Run container
+4. Copy `.env.example` to `.env` and edit the file `.env` accordingly
 
 ```sh
-$ docker run --rm -d --name briefkasten-scrape \
-  -e SUPABASE_KEY="${{ secrets.SUPABASE_KEY }}" \
-  -e SUPABASE_URL="${{ secrets.SUPABASE_URL }}" \
-  -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-  -e BOOKMARKS_CHUNK="${{ secrets.BOOKMARKS_CHUNK }}" \
+$ cp .env.example .env
+$ vim .env
+```
+
+#### **File `.env.example` for reference**
+
+```
+DATABASE_URL=postgres://bkAdmin:briefkasten@postgres:5432/briefkasten?sslmode=disable
+
+SUPABASE_KEY=
+SUPABASE_URL=
+SUPABASE_BUCKET_ID=
+
+BOOKMARKS_CHUNK=5
+```
+
+5. Run container
+
+```sh
+$ docker run \
+  --rm \
+  --name briefkasten-scrape \
+  --network briefkasten_default \
+  --env-file .env
   briefkasten-scrape:latest
 ```
 
 This will execute and fetch the first 5 Bookmarks with missing cover images and attempt to capture them with Playwright. They will be uploaded to your image store of choice and then displayed for the user the next time they open their Briefkasten.
+
+## ⌚ Running the container automatically via a cronjob
+
+1. Install your favourite `cron` distribution
+
+```sh
+$ sudo apt install cronie
+```
+
+2. Enable and start the service
+
+```sh
+$ sudo systemctl enable cronie
+$ sudo systemctl start cronie
+```
+
+3. Edit your crontab
+
+```sh
+$ crontab -e
+```
+
+You can configure it to run each 20 minutes; for this, add the following line, and save the file:
+
+```
+*/20 * * * * docker run --rm --name briefkasten-scrape --network briefkasten_default --env-file /PATH/TO/YOUR/.ENV_FILE briefkasten-scrape:latest
+```
+
+`--network` is the network the `briefkasten` docker compose is using. Probably no need to change.
+
+You need to edit `/PATH/TO/YOUR/ENVFILE` above pointing to your `ENVFILE`
+
+If you want to run your cronjob on another period, you can check the respective codes in https://crontab.guru
 
 ## 🏗 Contributing
 
