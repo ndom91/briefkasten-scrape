@@ -34,13 +34,14 @@ $ npm install
 $ docker build . -t briefkasten-scrape:latest
 ```
 
-4. Configure the file `ENVFILE` accordingly
+4. Copy `.env.example` to `.env` and edit the file `.env` accordingly
 
 ```sh
-$ vim ENVFILE
+$ cp .env.example .env
+$ vim .env
 ```
 
-#### **File `ENVFILE`**
+#### **File `.env.example` for reference**
 
 ```
 DATABASE_URL=postgres://bkAdmin:briefkasten@postgres:5432/briefkasten?sslmode=disable
@@ -59,7 +60,7 @@ $ docker run \
   --rm \
   --name briefkasten-scrape \
   --network briefkasten_default \
-  --env-file ENVFILE
+  --env-file .env
   briefkasten-scrape:latest
 ```
 
@@ -89,7 +90,7 @@ $ crontab -e
 You can configure it to run each 20 minutes; for this, add the following line, and save the file:
 
 ```
-*/20 * * * * docker run --rm --name briefkasten-scrape --network briefkasten_default --env-file /PATH/TO/YOUR/ENVFILE briefkasten-scrape:latest
+*/20 * * * * docker run --rm --name briefkasten-scrape --network briefkasten_default --env-file /PATH/TO/YOUR/.ENV_FILE briefkasten-scrape:latest
 ```
 
 `--network` is the network the `briefkasten` docker compose is using. Probably no need to change.
