@@ -60,9 +60,9 @@ const fetchImage = async (url, id) => {
         connectionString: process.env.DATABASE_URL,
       })
       await client.connect()
-      const imageUrl = `https://source.unsplash.com/random/300x201?sig=${Math.floor(
+      const imageUrl = `https://picsum.photos/seed/${Math.floor(
         Math.random() * 100
-      )}`
+      )}/300/201`
       const res = await client.query(
         `UPDATE "Bookmark" SET image = $1 WHERE id = $2`,
         [imageUrl, id]
